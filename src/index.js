@@ -1,7 +1,8 @@
 const express = require('express');
 const Stripe = require('stripe');
-
+const cors = require('cors');
 const app = express();
+app.use(cors());
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2020-08-27' // Replace with your desired Stripe API version
 });
@@ -14,7 +15,7 @@ app.post('/create-checkout-session', async (req, res) => {
       payment_method_types: ['card'],
       line_items: [
         {
-          price: 'PRICE_ID_HERE', // Replace with your Price ID
+          price: req.query.price, // Replace with your Price ID
           quantity: 1,
         },
       ],
@@ -35,3 +36,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+export default app;
